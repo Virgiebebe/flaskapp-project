@@ -1,0 +1,60 @@
+- name: Install required packages and setup virtual environment
+  hosts: Deploy-flask
+  become: yes
+
+  tasks:
+    - name: Install required packages (CentOS)
+      yum:
+        name:
+          - python3
+          - python3-pip
+          - git
+          - firewalld
+        state: present
+
+    - name: Clone Flask-App from GitHub
+      git:
+        repo: https://github.com/Virgiebebe/flaskapp-project.git
+        dest: /home/{{ ansible_user }}/flaskapp-project
+        version: main
+      environment:
+        GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
+     
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+        executable: pip3
+        state: present
+
+    - name: Set up a virtual environment
+      become: yes
+      command: "python3 -m venv /home/{{ ansible_user }}/flaskapp-project/flask_env"
+
+    - name: Activate Flask virtual environment
+      ansible.builtin.shell: source /home/{{ ansible_user }}/flaskapp-project/flask_env/bin/activate
+      args:
+        executable: /bin/bash
+
+    - name: Install Flask
+      pip:
+        name: Flask
+        executable: pip3
+        state: present
+
+    - name: Install Gunicorn
+      pip:
+        name: gunicorn
+        executable: pip3
+        state: present
+
+    - name: Configure Firewall
+      firewalld:
+        port: 5000/tcp
+        permanent: yes
+        state: enabled
+
+    - name: Restart firewalld
+      systemd:
+        name: firewalld
+        state: restarted
+      become: yes
