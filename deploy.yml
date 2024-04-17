@@ -1,0 +1,27 @@
+---
+- name: Deploy Flask Application
+  hosts: Deploy-flask
+  become: yes
+
+  tasks:
+    - name: Install HTTPD
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start HTTPD
+      service:
+        name: httpd
+        state: started
+    
+    - name: Start HTTPD
+      service:
+        name: httpd
+        enabled: yes
+
+    - name: Copy Application file
+      copy:
+      src: flask.html
+      dest: /var/www/html/index.html
+      force: yes
+...
