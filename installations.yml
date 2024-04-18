@@ -15,7 +15,7 @@
     - name: Clone Flask-App from GitHub
       git:
         repo: https://github.com/Virgiebebe/flaskapp-project.git
-        dest: /home/{{ ansible_user }}/flaskapp-project
+        dest: /home/centos/flaskapp-project
         version: main
       environment:
         GIT_SSH_COMMAND: 'ssh -o StrictHostKeyChecking=no'
@@ -28,10 +28,10 @@
 
     - name: Set up a virtual environment
       become: yes
-      command: "python3 -m venv /home/{{ ansible_user }}/flaskapp-project/flask_env"
+      command: "python3 -m venv /home/centos/flaskapp-project/flask_env"
 
     - name: Activate Flask virtual environment
-      ansible.builtin.shell: source /home/{{ ansible_user }}/flaskapp-project/flask_env/bin/activate
+      ansible.builtin.shell: source /home/centos/flaskapp-project/flask_env/bin/activate
       args:
         executable: /bin/bash
 
