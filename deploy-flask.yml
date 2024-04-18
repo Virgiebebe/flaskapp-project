@@ -3,7 +3,17 @@
   become: yes
 
   tasks:
+    - name: Activate Flask virtual environment
+      ansible.builtin.shell: source /home/centos/flaskapp-project/flask_env/bin/activate
+      args:
+        executable: /bin/bash
+
     - name: Start Gunicorn
-      ansible.builtin.shell: /home/{{ ansible_user }}/flaskapp-project/flask_env/bin/gunicorn -b 0.0.0.0:5000 -w 4 app:app
+      ansible.builtin.shell: /home/centos/flaskapp-project/flask_env/bin/gunicorn -b 0.0.0.0:5000 -w 4 app:app
+      args:
+        executable: /bin/bash
+
+    - name: Run Flask Application
+      ansible.builtin.shell: python /home/centos/flaskapp-project/app.py
       args:
         executable: /bin/bash
