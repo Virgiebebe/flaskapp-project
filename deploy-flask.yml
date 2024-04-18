@@ -1,0 +1,9 @@
+- name: Deploy Flask App
+  hosts: Deploy-flask
+  become: yes
+
+  tasks:
+    - name: Start Gunicorn
+      ansible.builtin.shell: /home/{{ ansible_user }}/flaskapp-project/flask_env/bin/gunicorn -b 0.0.0.0:5000 -w 4 app:app
+      args:
+        executable: /bin/bash
